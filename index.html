@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Твой ремонт готов — PRO CRM для мастеров</title>
+    <title>Твой ремонт готов — Детальная смета по видам работ</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,11 +19,11 @@
         <div class="max-w-md mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-slate-950 text-xl font-black shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-helmet-safety"></i>
+                    <i class="fa-solid fa-list-check"></i>
                 </div>
                 <div>
                     <h1 class="font-extrabold text-base tracking-tight leading-none">Ремонт <span class="text-emerald-400">ГОТОВ</span></h1>
-                    <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">PRO CRM v5.1</span>
+                    <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">PRO v6.0 (Детальный прайс)</span>
                 </div>
             </div>
             <!-- Переключатель режимов -->
@@ -36,165 +36,109 @@
 
     <main class="max-w-md mx-auto p-4 space-y-4">
 
-        <!-- РЕЖИМ 1: КАЛЬКУЛЯТОР ДЛЯ КЛИЕНТА -->
+        <!-- РЕЖИМ 1: КАЛЬКУЛЯТОР ДЛЯ КЛИЕНТА (С детальной разбивкой) -->
         <div id="clientView" class="space-y-4">
             
-            <!-- Приветствие с именем клиента из ссылки -->
             <div class="bg-gradient-to-br from-slate-900 to-slate-900/60 border border-slate-800 rounded-3xl p-5 shadow-xl relative overflow-hidden">
                 <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
-                <span id="clientBadge" class="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full mb-3">Персональный расчет</span>
-                <h2 id="clientGreeting" class="text-xl font-bold tracking-tight text-white mb-1">Смета онлайн от вашего мастера</h2>
-                <p class="text-xs text-slate-400">Введите параметры объекта, чтобы получить максимальный предварительный расчет по фиксированным тарифам.</p>
+                <span id="clientBadge" class="inline-block text-[10px] font-bold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full mb-3">Персональная смета</span>
+                <h2 id="clientGreeting" class="text-xl font-bold tracking-tight text-white mb-1">Детальный расчет от мастера</h2>
+                <p class="text-xs text-slate-400">Укажите объемы работ, чтобы увидеть понятную расшифровку каждой позиции.</p>
             </div>
 
-            <!-- Форма расчета -->
+            <!-- Форма ввода объемов по видам работ -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Площадь помещения (м²)</label>
-                    <div class="relative">
-                        <input type="number" id="area" placeholder="Например: 60" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-white text-lg font-bold focus:outline-none focus:border-emerald-500 transition-all">
-                        <span class="absolute right-4 top-4 text-slate-500 font-bold text-sm">м²</span>
-                    </div>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Объемы работ на объекте</h3>
+
+                <!-- Динамический список видов работ -->
+                <div id="clientWorkItems" class="space-y-3">
+                    <!-- Заполняется скриптом из прайса мастера -->
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Тип ремонта</label>
-                    <select id="repairType" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3.5 text-white text-sm font-semibold focus:outline-none focus:border-emerald-500 transition-all">
-                        <option value="cosmetic">Косметический ремонт</option>
-                        <option value="capital" selected>Капитальный ремонт</option>
-                        <option value="premium">Премиум / Дизайн-проект</option>
-                    </select>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Примечания / пожелания</label>
+                    <textarea id="clientNotes" rows="2" placeholder="Например: срочный объект, материал заказчика..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-all resize-none"></textarea>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Детали и пожелания к объекту</label>
-                    <textarea id="clientNotes" rows="2" placeholder="Например: новостройка, стены под покраску..." class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500 transition-all resize-none"></textarea>
-                </div>
-
-                <button onclick="calculateEstimate()" class="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-extrabold text-base py-4 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calculator"></i> Рассчитать смету
+                <button onclick="calculateDetailedEstimate()" class="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-extrabold text-base py-4 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> Рассчитать детально
                 </button>
             </div>
 
-            <!-- Блок результатов -->
+            <!-- Блок результатов с детализацией -->
             <div id="resultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Предварительная смета (Максимум)</span>
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Смета с расшифровкой</span>
                     <span class="text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-emerald-500/20">Готово</span>
                 </div>
 
-                <div class="space-y-2.5 text-sm">
-                    <div class="flex justify-between text-slate-300">
-                        <span>Работы мастера:</span>
-                        <span id="resWork" class="font-bold text-white">0 ₽</span>
-                    </div>
-                    <div class="flex justify-between text-slate-300">
-                        <span>Материалы (все виды):</span>
-                        <span id="resMat" class="font-bold text-white">0 ₽</span>
-                    </div>
-                    <div class="flex justify-between text-slate-400 text-xs">
-                        <span>Резерв на непредвиденное (10%):</span>
-                        <span id="resReserve" class="font-mono">0 ₽</span>
-                    </div>
+                <!-- Список выбранных работ с ценами -->
+                <div id="resultItemsList" class="space-y-2 text-sm divide-y divide-slate-800/60">
+                    <!-- Сюда упадут выбранные позиции -->
                 </div>
 
                 <div class="pt-3 border-t border-slate-800 flex justify-between items-end">
                     <div>
-                        <span class="text-xs text-slate-400">Итоговая сумма:</span>
+                        <span class="text-xs text-slate-400">Итоговая стоимость:</span>
                         <div id="resTotal" class="text-2xl font-black text-emerald-400 tracking-tight">0 ₽</div>
                     </div>
                 </div>
 
                 <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm py-3.5 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Отправить расчет мастеру в WhatsApp
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Отправить смету мастеру в WhatsApp
                 </button>
             </div>
         </div>
 
-        <!-- РЕЖИМ 2: ПАНЕЛЬ МАСТЕРА (АДМИН + CRM) -->
+        <!-- РЕЖИМ 2: ПАНЕЛЬ МАСТЕРА (НАСТРОЙКА ДЕТАЛЬНОГО ПРАЙСА) -->
         <div id="adminView" class="hidden space-y-4">
             
-            <!-- Настройка прайса -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                     <h2 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-emerald-400"></i> Ваш реальный прайс
+                        <i class="fa-solid fa-list text-emerald-400"></i> Каталог цен по видам работ
                     </h2>
-                    <span class="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-bold border border-amber-500/20">Кабинет</span>
+                    <span class="text-xs bg-amber-500/10 text-amber-400 px-2.5 py-1 rounded-full font-bold border border-amber-500/20">Прайс-лист</span>
                 </div>
 
-                <p class="text-xs text-slate-400">Установите реальные расценки за 1 м². Все расчеты для клиентов будут идти строго по вашему прайсу.</p>
+                <p class="text-xs text-slate-400">Здесь вы задаете стоимость за единицу измерения (м², шт., п.м.). Клиент увидит эти позиции в своем калькуляторе.</p>
 
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 space-y-2">
-                    <span class="text-xs font-bold text-slate-200">Косметический ремонт</span>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Работа (₽/м²)</label>
-                            <input type="number" id="pCosmWork" value="3500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
-                            <input type="number" id="pCosmMat" value="2500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                    </div>
+                <!-- Список позиций прайса мастера -->
+                <div id="adminPriceList" class="space-y-3">
+                    <!-- Рендерится через JS -->
                 </div>
 
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 space-y-2">
-                    <span class="text-xs font-bold text-slate-200">Капитальный ремонт</span>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Работа (₽/м²)</label>
-                            <input type="number" id="pCapWork" value="8500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
-                            <input type="number" id="pCapMat" value="6000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 space-y-2">
-                    <span class="text-xs font-bold text-slate-200">Премиум ремонт</span>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Работа (₽/м²)</label>
-                            <input type="number" id="pPremWork" value="15000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                        <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
-                            <input type="number" id="pPremMat" value="12000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
-                        </div>
-                    </div>
-                </div>
+                <button onclick="addPriceItem()" class="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold py-2.5 rounded-xl text-xs transition-all border border-slate-700 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Добавить вид работы
+                </button>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ваш номер WhatsApp (для получения смет)</label>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 mt-4">Ваш номер WhatsApp (для смет)</label>
                     <input type="text" id="masterPhone" placeholder="79991234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
                 </div>
 
-                <button onclick="saveAdminSettings()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3.5 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-floppy-disk"></i> Сохранить прайс
+                <button onclick="saveAdminPrices()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3.5 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Сохранить детальный прайс
                 </button>
             </div>
 
-            <!-- Генератор персональной ссылки -->
+            <!-- Генератор ссылки -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                 <h3 class="text-sm font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-link text-emerald-400"></i> Персональная ссылка для клиента
                 </h3>
-                <p class="text-xs text-slate-400">Введите имя клиента (например: Антон), чтобы сгенерировать личную ссылку.</p>
-                <input type="text" id="clientNameInput" placeholder="Имя клиента" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                <input type="text" id="clientNameInput" placeholder="Имя клиента (например: Иван)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
                 <div class="flex gap-2">
                     <input type="text" id="personalLink" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
                     <button onclick="generatePersonalLink()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 rounded-xl text-xs font-bold transition-all">Создать</button>
                 </div>
             </div>
 
-            <!-- История заявок клиентов -->
+            <!-- История запросов -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                     <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-history text-emerald-400"></i> История запросов клиентов
+                        <i class="fa-solid fa-history text-emerald-400"></i> История запросов
                     </h3>
                     <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:underline">Очистить</button>
                 </div>
@@ -209,31 +153,194 @@
 
     <!-- Логика -->
     <script>
+        // Стандартный детальный прайс по умолчанию
+        let defaultPrices = [
+            { id: 'demolition', name: 'Демонтаж стен / перегородок', unit: 'м²', price: 1200 },
+            { id: 'wall_prep', name: 'Штукатурка и выравнивание стен', unit: 'м²', price: 850 },
+            { id: 'painting', name: 'Покраска стен / поклейка обоев', unit: 'м²', price: 600 },
+            { id: 'floor_screed', name: 'Стяжка пола', unit: 'м²', price: 950 },
+            { id: 'flooring', name: 'Укладка ламината / плитки', unit: 'м²', price: 1500 },
+            { id: 'electricity', name: 'Электромонтажные работы (точка)', unit: 'шт', price: 900 },
+            { id: 'plumbing', name: 'Сантехнические работы (точка)', unit: 'шт', price: 2500 }
+        ];
+
         let currentCalc = {};
 
         window.onload = function() {
-            if(localStorage.getItem('capWork')) {
-                document.getElementById('pCapWork').value = localStorage.getItem('capWork');
-                document.getElementById('pCapMat').value = localStorage.getItem('capMat');
-                document.getElementById('pCosmWork').value = localStorage.getItem('cosmWork');
-                document.getElementById('pCosmMat').value = localStorage.getItem('cosmMat');
-                document.getElementById('pPremWork').value = localStorage.getItem('premWork');
-                document.getElementById('pPremMat').value = localStorage.getItem('premMat');
-                if(localStorage.getItem('masterPhone')) {
-                    document.getElementById('masterPhone').value = localStorage.getItem('masterPhone');
-                }
+            loadPricesToAdmin();
+            loadClientForm();
+
+            if(localStorage.getItem('masterPhone')) {
+                document.getElementById('masterPhone').value = localStorage.getItem('masterPhone');
             }
 
             const urlParams = new URLSearchParams(window.location.search);
             const clientName = urlParams.get('client');
             if(clientName) {
                 document.getElementById('clientGreeting').innerText = `Здравствуйте, ${clientName}!`;
-                document.getElementById('clientBadge').innerText = `Ваш персональный расчет`;
+                document.getElementById('clientBadge').innerText = `Ваша персональная смета`;
             }
 
             updateBaseLink();
             loadHistory();
         };
+
+        function getSavedPrices() {
+            const saved = localStorage.getItem('detailedPrices');
+            return saved ? JSON.parse(saved) : defaultPrices;
+        }
+
+        function loadPricesToAdmin() {
+            const prices = getSavedPrices();
+            const container = document.getElementById('adminPriceList');
+            container.innerHTML = '';
+            
+            prices.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 space-y-2 price-row" data-index="${index}">
+                        <div class="flex gap-2">
+                            <input type="text" value="${item.name}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-white text-xs font-semibold item-name">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="text-[9px] uppercase font-bold text-slate-500">Цена за ед. (₽)</label>
+                                <input type="number" value="${item.price}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-white font-bold text-xs item-price">
+                            </div>
+                            <div>
+                                <label class="text-[9px] uppercase font-bold text-slate-500">Ед. изм.</label>
+                                <input type="text" value="${item.unit}" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-white font-bold text-xs item-unit">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addPriceItem() {
+            let prices = getSavedPrices();
+            prices.push({ id: 'custom_' + Date.now(), name: 'Новый вид работы', unit: 'м²', price: 1000 });
+            localStorage.setItem('detailedPrices', JSON.stringify(prices));
+            loadPricesToAdmin();
+            loadClientForm();
+        }
+
+        function saveAdminPrices() {
+            const rows = document.querySelectorAll('.price-row');
+            let updatedPrices = [];
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.item-name').value;
+                const price = parseFloat(row.querySelector('.item-price').value) || 0;
+                const unit = row.querySelector('.item-unit').value;
+                updatedPrices.push({ id: 'item_' + Math.random(), name, unit, price });
+            });
+
+            localStorage.setItem('detailedPrices', JSON.stringify(updatedPrices));
+            localStorage.setItem('masterPhone', document.getElementById('masterPhone').value);
+
+            alert('Детальный прайс успешно сохранен!');
+            switchMode('client');
+            loadClientForm();
+        }
+
+        function loadClientForm() {
+            const prices = getSavedPrices();
+            const container = document.getElementById('clientWorkItems');
+            container.innerHTML = '';
+
+            prices.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 flex items-center justify-between gap-3 work-input-row" data-name="${item.name}" data-unit="${item.unit}" data-price="${item.price}">
+                        <div class="flex-1">
+                            <p class="text-xs font-bold text-white">${item.name}</p>
+                            <span class="text-[10px] text-emerald-400 font-mono">${item.price} ₽ / ${item.unit}</span>
+                        </div>
+                        <div class="w-24">
+                            <input type="number" placeholder="0" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white text-sm font-bold text-center work-amount focus:outline-none focus:border-emerald-500" min="0">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function calculateDetailedEstimate() {
+            const rows = document.querySelectorAll('.work-input-row');
+            const notes = document.getElementById('clientNotes').value;
+            let totalSum = 0;
+            let detailsText = [];
+
+            rows.forEach(row => {
+                const name = row.getAttribute('data-name');
+                const unit = row.getAttribute('data-unit');
+                const price = parseFloat(row.getAttribute('data-price'));
+                const amount = parseFloat(row.querySelector('.work-amount').value) || 0;
+
+                if(amount > 0) {
+                    const cost = amount * price;
+                    totalSum += cost;
+                    detailsText.push({ name, amount, unit, cost });
+                }
+            });
+
+            if(totalSum === 0) {
+                alert('Пожалуйста, укажите объем хотя бы для одной работы.');
+                return;
+            }
+
+            const fmt = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientName = urlParams.get('client') || 'Клиент';
+
+            currentCalc = {
+                client: clientName,
+                total: fmt.format(totalSum),
+                details: detailsText,
+                notes: notes,
+                date: new Date().toLocaleDateString()
+            };
+
+            saveToHistory(currentCalc);
+
+            // Отображаем результат
+            const listContainer = document.getElementById('resultList'); // исправлено ниже
+            const resList = document.getElementById('resultItemsList');
+            resList.innerHTML = '';
+
+            detailsText.forEach(item => {
+                resList.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <span class="text-slate-300">${item.name} (${item.amount} ${item.unit})</span>
+                        <span class="font-bold text-white">${fmt.format(item.cost)}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('resTotal').innerText = fmt.format(totalSum);
+            document.getElementById('resultCard').classList.remove('hidden');
+        }
+
+        function switchMode(mode) {
+            const clientV = document.getElementById('clientView');
+            const adminV = document.getElementById('adminView');
+            const mClient = document.getElementById('modeClient');
+            const mAdmin = document.getElementById('modeAdmin');
+
+            if(mode === 'client') {
+                clientV.classList.remove('hidden');
+                adminV.classList.add('hidden');
+                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
+                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+                loadClientForm();
+            } else {
+                clientV.classList.add('hidden');
+                adminV.classList.remove('hidden');
+                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
+                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+                loadPricesToAdmin();
+                loadHistory();
+            }
+        }
 
         function updateBaseLink() {
             const base = window.location.href.split('?')[0];
@@ -249,111 +356,20 @@
             const base = window.location.href.split('?')[0];
             const fullLink = `${base}?client=${encodeURIComponent(name)}`;
             document.getElementById('personalLink').value = fullLink;
-            
             navigator.clipboard.writeText(fullLink);
             alert(`Персональная ссылка для "${name}" создана и скопирована!`);
         }
 
-        function switchMode(mode) {
-            const clientV = document.getElementById('clientView');
-            const adminV = document.getElementById('adminView');
-            const mClient = document.getElementById('modeClient');
-            const mAdmin = document.getElementById('modeAdmin');
-
-            if(mode === 'client') {
-                clientV.classList.remove('hidden');
-                adminV.classList.add('hidden');
-                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
-                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
-            } else {
-                clientV.classList.add('hidden');
-                adminV.classList.remove('hidden');
-                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
-                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
-                loadHistory();
-            }
-        }
-
-        function saveAdminSettings() {
-            localStorage.setItem('capWork', document.getElementById('pCapWork').value);
-            localStorage.setItem('capMat', document.getElementById('pCapMat').value);
-            localStorage.setItem('cosmWork', document.getElementById('pCosmWork').value);
-            localStorage.setItem('cosmMat', document.getElementById('pCosmMat').value);
-            localStorage.setItem('premWork', document.getElementById('pPremWork').value);
-            localStorage.setItem('premMat', document.getElementById('pPremMat').value);
-            localStorage.setItem('masterPhone', document.getElementById('masterPhone').value);
-
-            alert('Прайс успешно сохранен!');
-            switchMode('client');
-        }
-
-        function calculateEstimate() {
-            const area = parseFloat(document.getElementById('area').value);
-            const typeSelect = document.getElementById('repairType');
-            const typeKey = typeSelect.value;
-            const typeName = typeSelect.options[typeSelect.selectedIndex].text;
-            const notes = document.getElementById('clientNotes').value;
-
-            if(!area || area <= 0) {
-                alert('Пожалуйста, введите корректную площадь.');
-                return;
-            }
-
-            let wRate = 8500, mRate = 6000;
-
-            if(typeKey === 'cosmetic') {
-                wRate = parseFloat(localStorage.getItem('cosmWork')) || 3500;
-                mRate = parseFloat(localStorage.getItem('cosmMat')) || 2500;
-            } else if(typeKey === 'capital') {
-                wRate = parseFloat(localStorage.getItem('capWork')) || 8500;
-                mRate = parseFloat(localStorage.getItem('capMat')) || 6000;
-            } else if(typeKey === 'premium') {
-                wRate = parseFloat(localStorage.getItem('premWork')) || 15000;
-                mRate = parseFloat(localStorage.getItem('premMat')) || 12000;
-            }
-
-            const workSum = area * wRate;
-            const matSum = area * mRate;
-            const sub = workSum + matSum;
-            const reserve = sub * 0.10;
-            const total = sub + reserve;
-
-            const fmt = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const clientName = urlParams.get('client') || 'Клиент';
-
-            currentCalc = {
-                client: clientName,
-                area: area,
-                type: typeName,
-                work: fmt.format(workSum),
-                materials: fmt.format(matSum),
-                total: fmt.format(total),
-                notes: notes,
-                date: new Date().toLocaleDateString()
-            };
-
-            saveToHistory(currentCalc);
-
-            document.getElementById('resWork').innerText = fmt.format(workSum);
-            document.getElementById('resMat').innerText = fmt.format(matSum);
-            document.getElementById('resReserve').innerText = fmt.format(reserve);
-            document.getElementById('resTotal').innerText = fmt.format(total);
-
-            document.getElementById('resultCard').classList.remove('hidden');
-        }
-
         function saveToHistory(calc) {
-            let history = JSON.parse(localStorage.getItem('masterHistory') || '[]');
+            let history = JSON.parse(localStorage.getItem('masterHistoryDetailed') || '[]');
             history.unshift(calc);
             if(history.length > 20) history.pop();
-            localStorage.setItem('masterHistory', JSON.stringify(history));
+            localStorage.setItem('masterHistoryDetailed', JSON.stringify(history));
         }
 
         function loadHistory() {
             const historyList = document.getElementById('historyList');
-            let history = JSON.parse(localStorage.getItem('masterHistory') || '[]');
+            let history = JSON.parse(localStorage.getItem('masterHistoryDetailed') || '[]');
             
             if(history.length === 0) {
                 historyList.innerHTML = '<p class="text-xs text-slate-500 italic">Пока нет сохраненных запросов...</p>';
@@ -362,33 +378,33 @@
 
             historyList.innerHTML = '';
             history.forEach(item => {
+                let itemsSummary = item.details.map(d => `${d.name}: ${d.amount} ${d.unit}`).join('; ');
                 historyList.innerHTML += `
                     <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl space-y-1 text-xs">
                         <div class="flex justify-between font-bold text-white">
-                            <span>👤 ${item.client} (${item.area} м²)</span>
+                            <span>👤 ${item.client}</span>
                             <span class="text-emerald-400">${item.total}</span>
                         </div>
-                        <div class="text-slate-400">${item.type} | ${item.date}</div>
-                        ${item.notes ? `<div class="text-slate-500 italic">“${item.notes}”</div>` : ''}
+                        <div class="text-slate-400 text-[11px] truncate">${itemsSummary}</div>
+                        <div class="text-slate-500 text-[10px]">${item.date}</div>
                     </div>
                 `;
             });
         }
 
         function clearHistory() {
-            localStorage.removeItem('masterHistory');
+            localStorage.removeItem('masterHistoryDetailed');
             loadHistory();
         }
 
         function sendToWhatsApp() {
             const phone = localStorage.getItem('masterPhone') || '';
-            const text = `Здравствуйте! Заявка от клиента: ${currentCalc.client}%0A` +
-                         `- Площадь: ${currentCalc.area} м²%0A` +
-                         `- Тип: ${currentCalc.type}%0A` +
-                         `- Работы: ${currentCalc.work}%0A` +
-                         `- Материалы: ${currentCalc.materials}%0A` +
-                         `*Итого (максимум с резервом):* ${currentCalc.total}%0A` +
-                         (currentCalc.notes ? `- Пожелания: ${currentCalc.notes}` : '');
+            let detailsStr = currentCalc.details.map(d => `- ${d.name}: ${d.amount} ${d.unit} = ${d.cost} ₽`).join('%0A');
+            
+            const text = `Здравствуйте! Детальная смета от клиента: ${currentCalc.client}%0A` +
+                         `${detailsStr}%0A` +
+                         `*Итого:* ${currentCalc.total}%0A` +
+                         (currentCalc.notes ? `Пожелания: ${currentCalc.notes}` : '');
 
             window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
         }

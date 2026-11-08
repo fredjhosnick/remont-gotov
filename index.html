@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Твой ремонт готов — Умный калькулятор смет</title>
-    <!-- Подключаем стильный Tailwind CSS для быстрого дизайна -->
+    <!-- Подключаем Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,7 +14,6 @@
     <header class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-10">
         <div class="max-w-md mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- Иконка / Логотип: Строительный инструмент + Галочка готовности -->
                 <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-slate-900 text-xl font-bold shadow-md">
                     <i class="fa-solid fa-calculator"></i>
                 </div>
@@ -23,7 +22,7 @@
                     <p class="text-xs text-slate-400">Быстрый расчёт сметы</p>
                 </div>
             </div>
-            <span class="text-xs bg-slate-800 text-emerald-400 font-semibold px-2.5 py-1 rounded-full border border-slate-700">v1.0</span>
+            <span class="text-xs bg-slate-800 text-emerald-400 font-semibold px-2.5 py-1 rounded-full border border-slate-700">v2.0</span>
         </div>
     </header>
 
@@ -89,22 +88,30 @@
                     <p id="totalCost" class="text-2xl font-black text-emerald-400">0 ₽</p>
                 </div>
             </div>
+
+            <!-- Кнопка отправки в WhatsApp -->
+            <button onclick="sendToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-bold text-sm py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 mt-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i> Отправить смету в WhatsApp
+            </button>
         </div>
 
     </main>
 
-    <!-- Скрипт расчёта на JavaScript -->
+    <!-- Скрипт расчёта и WhatsApp -->
     <script>
+        let lastCalculation = {};
+
         function calculateEstimate() {
             const area = parseFloat(document.getElementById('area').value);
-            const repairType = document.getElementById('repairType').value;
+            const repairSelect = document.getElementById('repairType');
+            const repairType = repairSelect.value;
+            const repairTypeName = repairSelect.options[repairSelect.selectedIndex].text;
 
             if (!area || area <= 0) {
                 alert('Пожалуйста, введите корректную площадь помещения.');
                 return;
             }
 
-            // Ставки за м² в зависимости от типа
             let workRate = 0;
             let materialRate = 0;
 
@@ -122,19 +129,38 @@
             const workTotal = area * workRate;
             const materialTotal = area * materialRate;
             const subtotal = workTotal + materialTotal;
-            const reserveTotal = subtotal * 0.10; // 10% запас
+            const reserveTotal = subtotal * 0.10;
             const grandTotal = subtotal + reserveTotal;
 
-            // Форматирование чисел в рубли
             const formatter = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+            // Сохраняем для WhatsApp
+            lastCalculation = {
+                area: area,
+                type: repairTypeName,
+                work: formatter.format(workTotal),
+                materials: formatter.format(materialTotal),
+                total: formatter.format(grandTotal)
+            };
 
             document.getElementById('workCost').innerText = formatter.format(workTotal);
             document.getElementById('materialCost').innerText = formatter.format(materialTotal);
             document.getElementById('reserveCost').innerText = formatter.format(reserveTotal);
             document.getElementById('totalCost').innerText = formatter.format(grandTotal);
 
-            // Показываем карточку результата
             document.getElementById('resultCard').classList.remove('hidden');
+        }
+
+        function sendToWhatsApp() {
+            const text = `Здравствуйте! Предварительный расчёт по объекту:%0A` +
+                         `- Площадь: ${lastCalculation.area} м²%0A` +
+                         `- Тип ремонта: ${lastCalculation.type}%0A` +
+                         `- Стоимость работ: ${lastCalculation.work}%0A` +
+                         `- Материалы: ${lastCalculation.materials}%0A` +
+                         `*Итого с запасом:* ${lastCalculation.total}%0A%0A` +
+                         `Приложение: «Твой ремонт готов»`;
+
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
     </script>
 </body>

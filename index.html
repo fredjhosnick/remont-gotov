@@ -23,7 +23,7 @@
                 </div>
                 <div>
                     <h1 class="font-extrabold text-base tracking-tight leading-none">Ремонт <span class="text-emerald-400">ГОТОВ</span></h1>
-                    <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">PRO CRM v5.0</span>
+                    <span class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">PRO CRM v5.1</span>
                 </div>
             </div>
             <!-- Переключатель режимов -->
@@ -77,7 +77,7 @@
             </div>
 
             <!-- Блок результатов -->
-            <div id="resultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4 animate-fadeIn">
+            <div id="resultCard" class="hidden bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-2xl space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Предварительная смета (Максимум)</span>
                     <span class="text-xs bg-emerald-500/10 text-emerald-400 font-mono px-2.5 py-1 rounded-full border border-emerald-500/20">Готово</span>
@@ -133,4 +133,265 @@
                             <input type="number" id="pCosmWork" value="3500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
                         </div>
                         <div>
-                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м
+                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
+                            <input type="number" id="pCosmMat" value="2500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 space-y-2">
+                    <span class="text-xs font-bold text-slate-200">Капитальный ремонт</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] uppercase font-bold text-slate-500">Работа (₽/м²)</label>
+                            <input type="number" id="pCapWork" value="8500" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
+                            <input type="number" id="pCapMat" value="6000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800/80 space-y-2">
+                    <span class="text-xs font-bold text-slate-200">Премиум ремонт</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] uppercase font-bold text-slate-500">Работа (₽/м²)</label>
+                            <input type="number" id="pPremWork" value="15000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase font-bold text-slate-500">Материалы (₽/м²)</label>
+                            <input type="number" id="pPremMat" value="12000" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-white font-bold text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ваш номер WhatsApp (для получения смет)</label>
+                    <input type="text" id="masterPhone" placeholder="79991234567" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm font-semibold focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <button onclick="saveAdminSettings()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold py-3.5 rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-floppy-disk"></i> Сохранить прайс
+                </button>
+            </div>
+
+            <!-- Генератор персональной ссылки -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-link text-emerald-400"></i> Персональная ссылка для клиента
+                </h3>
+                <p class="text-xs text-slate-400">Введите имя клиента (например: Антон), чтобы сгенерировать личную ссылку.</p>
+                <input type="text" id="clientNameInput" placeholder="Имя клиента" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500">
+                <div class="flex gap-2">
+                    <input type="text" id="personalLink" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-400 font-mono">
+                    <button onclick="generatePersonalLink()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 rounded-xl text-xs font-bold transition-all">Создать</button>
+                </div>
+            </div>
+
+            <!-- История заявок клиентов -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-history text-emerald-400"></i> История запросов клиентов
+                    </h3>
+                    <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:underline">Очистить</button>
+                </div>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    <p class="text-xs text-slate-500 italic">Пока нет сохраненных запросов...</p>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Логика -->
+    <script>
+        let currentCalc = {};
+
+        window.onload = function() {
+            if(localStorage.getItem('capWork')) {
+                document.getElementById('pCapWork').value = localStorage.getItem('capWork');
+                document.getElementById('pCapMat').value = localStorage.getItem('capMat');
+                document.getElementById('pCosmWork').value = localStorage.getItem('cosmWork');
+                document.getElementById('pCosmMat').value = localStorage.getItem('cosmMat');
+                document.getElementById('pPremWork').value = localStorage.getItem('premWork');
+                document.getElementById('pPremMat').value = localStorage.getItem('premMat');
+                if(localStorage.getItem('masterPhone')) {
+                    document.getElementById('masterPhone').value = localStorage.getItem('masterPhone');
+                }
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientName = urlParams.get('client');
+            if(clientName) {
+                document.getElementById('clientGreeting').innerText = `Здравствуйте, ${clientName}!`;
+                document.getElementById('clientBadge').innerText = `Ваш персональный расчет`;
+            }
+
+            updateBaseLink();
+            loadHistory();
+        };
+
+        function updateBaseLink() {
+            const base = window.location.href.split('?')[0];
+            document.getElementById('personalLink').value = base;
+        }
+
+        function generatePersonalLink() {
+            const name = document.getElementById('clientNameInput').value;
+            if(!name) {
+                alert('Введите имя клиента!');
+                return;
+            }
+            const base = window.location.href.split('?')[0];
+            const fullLink = `${base}?client=${encodeURIComponent(name)}`;
+            document.getElementById('personalLink').value = fullLink;
+            
+            navigator.clipboard.writeText(fullLink);
+            alert(`Персональная ссылка для "${name}" создана и скопирована!`);
+        }
+
+        function switchMode(mode) {
+            const clientV = document.getElementById('clientView');
+            const adminV = document.getElementById('adminView');
+            const mClient = document.getElementById('modeClient');
+            const mAdmin = document.getElementById('modeAdmin');
+
+            if(mode === 'client') {
+                clientV.classList.remove('hidden');
+                adminV.classList.add('hidden');
+                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
+                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+            } else {
+                clientV.classList.add('hidden');
+                adminV.classList.remove('hidden');
+                mAdmin.className = "px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-500 text-slate-950 transition-all shadow-sm";
+                mClient.className = "px-3 py-1.5 text-xs font-bold rounded-lg text-slate-400 hover:text-white transition-all";
+                loadHistory();
+            }
+        }
+
+        function saveAdminSettings() {
+            localStorage.setItem('capWork', document.getElementById('pCapWork').value);
+            localStorage.setItem('capMat', document.getElementById('pCapMat').value);
+            localStorage.setItem('cosmWork', document.getElementById('pCosmWork').value);
+            localStorage.setItem('cosmMat', document.getElementById('pCosmMat').value);
+            localStorage.setItem('premWork', document.getElementById('pPremWork').value);
+            localStorage.setItem('premMat', document.getElementById('pPremMat').value);
+            localStorage.setItem('masterPhone', document.getElementById('masterPhone').value);
+
+            alert('Прайс успешно сохранен!');
+            switchMode('client');
+        }
+
+        function calculateEstimate() {
+            const area = parseFloat(document.getElementById('area').value);
+            const typeSelect = document.getElementById('repairType');
+            const typeKey = typeSelect.value;
+            const typeName = typeSelect.options[typeSelect.selectedIndex].text;
+            const notes = document.getElementById('clientNotes').value;
+
+            if(!area || area <= 0) {
+                alert('Пожалуйста, введите корректную площадь.');
+                return;
+            }
+
+            let wRate = 8500, mRate = 6000;
+
+            if(typeKey === 'cosmetic') {
+                wRate = parseFloat(localStorage.getItem('cosmWork')) || 3500;
+                mRate = parseFloat(localStorage.getItem('cosmMat')) || 2500;
+            } else if(typeKey === 'capital') {
+                wRate = parseFloat(localStorage.getItem('capWork')) || 8500;
+                mRate = parseFloat(localStorage.getItem('capMat')) || 6000;
+            } else if(typeKey === 'premium') {
+                wRate = parseFloat(localStorage.getItem('premWork')) || 15000;
+                mRate = parseFloat(localStorage.getItem('premMat')) || 12000;
+            }
+
+            const workSum = area * wRate;
+            const matSum = area * mRate;
+            const sub = workSum + matSum;
+            const reserve = sub * 0.10;
+            const total = sub + reserve;
+
+            const fmt = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const clientName = urlParams.get('client') || 'Клиент';
+
+            currentCalc = {
+                client: clientName,
+                area: area,
+                type: typeName,
+                work: fmt.format(workSum),
+                materials: fmt.format(matSum),
+                total: fmt.format(total),
+                notes: notes,
+                date: new Date().toLocaleDateString()
+            };
+
+            saveToHistory(currentCalc);
+
+            document.getElementById('resWork').innerText = fmt.format(workSum);
+            document.getElementById('resMat').innerText = fmt.format(matSum);
+            document.getElementById('resReserve').innerText = fmt.format(reserve);
+            document.getElementById('resTotal').innerText = fmt.format(total);
+
+            document.getElementById('resultCard').classList.remove('hidden');
+        }
+
+        function saveToHistory(calc) {
+            let history = JSON.parse(localStorage.getItem('masterHistory') || '[]');
+            history.unshift(calc);
+            if(history.length > 20) history.pop();
+            localStorage.setItem('masterHistory', JSON.stringify(history));
+        }
+
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            let history = JSON.parse(localStorage.getItem('masterHistory') || '[]');
+            
+            if(history.length === 0) {
+                historyList.innerHTML = '<p class="text-xs text-slate-500 italic">Пока нет сохраненных запросов...</p>';
+                return;
+            }
+
+            historyList.innerHTML = '';
+            history.forEach(item => {
+                historyList.innerHTML += `
+                    <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl space-y-1 text-xs">
+                        <div class="flex justify-between font-bold text-white">
+                            <span>👤 ${item.client} (${item.area} м²)</span>
+                            <span class="text-emerald-400">${item.total}</span>
+                        </div>
+                        <div class="text-slate-400">${item.type} | ${item.date}</div>
+                        ${item.notes ? `<div class="text-slate-500 italic">“${item.notes}”</div>` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('masterHistory');
+            loadHistory();
+        }
+
+        function sendToWhatsApp() {
+            const phone = localStorage.getItem('masterPhone') || '';
+            const text = `Здравствуйте! Заявка от клиента: ${currentCalc.client}%0A` +
+                         `- Площадь: ${currentCalc.area} м²%0A` +
+                         `- Тип: ${currentCalc.type}%0A` +
+                         `- Работы: ${currentCalc.work}%0A` +
+                         `- Материалы: ${currentCalc.materials}%0A` +
+                         `*Итого (максимум с резервом):* ${currentCalc.total}%0A` +
+                         (currentCalc.notes ? `- Пожелания: ${currentCalc.notes}` : '');
+
+            window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+        }
+    </script>
+</body>
+</html>

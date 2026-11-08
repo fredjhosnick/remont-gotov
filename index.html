@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Твой ремонт готов — Умный калькулятор смет</title>
+    <!-- Подключаем стильный Tailwind CSS для быстрого дизайна -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen pb-10">
+
+    <!-- Шапка приложения с Логотипом -->
+    <header class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-10">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- Иконка / Логотип: Строительный инструмент + Галочка готовности -->
+                <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-slate-900 text-xl font-bold shadow-md">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg leading-tight tracking-wide">Твой ремонт <span class="text-emerald-400">ГОТОВ</span></h1>
+                    <p class="text-xs text-slate-400">Быстрый расчёт сметы</p>
+                </div>
+            </div>
+            <span class="text-xs bg-slate-800 text-emerald-400 font-semibold px-2.5 py-1 rounded-full border border-slate-700">v1.0</span>
+        </div>
+    </header>
+
+    <!-- Основной контейнер приложения -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
+        
+        <!-- Карточка ввода данных -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h2 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-ruler-combined text-emerald-600"></i> Параметры объекта
+            </h2>
+
+            <!-- Ввод площади -->
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase tracking-wider">Площадь помещения (м²)</label>
+                <div class="relative">
+                    <input type="number" id="area" placeholder="Например: 45" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+                    <span class="absolute right-4 top-3.5 text-slate-400 font-bold">м²</span>
+                </div>
+            </div>
+
+            <!-- Выбор типа ремонта -->
+            <div class="mb-5">
+                <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase tracking-wider">Тип ремонта</label>
+                <select id="repairType" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 text-base font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+                    <option value="cosmetic">Косметический (обновить обои, ламинат)</option>
+                    <option value="capital" selected>Капитальный (выравнивание, электрика, сантехника)</option>
+                    <option value="premium">Премиум (дизайн-проект, перепланировка)</option>
+                </select>
+            </div>
+
+            <!-- Кнопка рассчитать -->
+            <button onclick="calculateEstimate()" class="w-full bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-slate-900 font-extrabold text-lg py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Рассчитать смету
+            </button>
+        </div>
+
+        <!-- Блок результатов (скрыт по умолчанию) -->
+        <div id="resultCard" class="hidden bg-slate-900 text-white rounded-2xl p-5 shadow-xl border border-slate-800 space-y-4">
+            <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+                <span class="text-xs uppercase font-bold text-slate-400 tracking-wider">Предварительная смета</span>
+                <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded font-mono">Готово</span>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm text-slate-300">
+                    <span>Работы мастеров:</span>
+                    <span id="workCost" class="font-semibold text-white">0 ₽</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-300">
+                    <span>Черновые и чистовые материалы:</span>
+                    <span id="materialCost" class="font-semibold text-white">0 ₽</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-400 text-xs">
+                    <span>Запас на непредвиденные расходы (10%):</span>
+                    <span id="reserveCost" class="font-mono">0 ₽</span>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex justify-between items-end">
+                <div>
+                    <p class="text-xs text-slate-400">Итоговая стоимость:</p>
+                    <p id="totalCost" class="text-2xl font-black text-emerald-400">0 ₽</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Скрипт расчёта на JavaScript -->
+    <script>
+        function calculateEstimate() {
+            const area = parseFloat(document.getElementById('area').value);
+            const repairType = document.getElementById('repairType').value;
+
+            if (!area || area <= 0) {
+                alert('Пожалуйста, введите корректную площадь помещения.');
+                return;
+            }
+
+            // Ставки за м² в зависимости от типа
+            let workRate = 0;
+            let materialRate = 0;
+
+            if (repairType === 'cosmetic') {
+                workRate = 3500;
+                materialRate = 2500;
+            } else if (repairType === 'capital') {
+                workRate = 8500;
+                materialRate = 6000;
+            } else if (repairType === 'premium') {
+                workRate = 15000;
+                materialRate = 12000;
+            }
+
+            const workTotal = area * workRate;
+            const materialTotal = area * materialRate;
+            const subtotal = workTotal + materialTotal;
+            const reserveTotal = subtotal * 0.10; // 10% запас
+            const grandTotal = subtotal + reserveTotal;
+
+            // Форматирование чисел в рубли
+            const formatter = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+            document.getElementById('workCost').innerText = formatter.format(workTotal);
+            document.getElementById('materialCost').innerText = formatter.format(materialTotal);
+            document.getElementById('reserveCost').innerText = formatter.format(reserveTotal);
+            document.getElementById('totalCost').innerText = formatter.format(grandTotal);
+
+            // Показываем карточку результата
+            document.getElementById('resultCard').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
